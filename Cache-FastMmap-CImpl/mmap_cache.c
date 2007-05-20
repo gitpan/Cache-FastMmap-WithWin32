@@ -24,7 +24,12 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <time.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#else
+#include <io.h>
+#include <process.h>
+#endif
 #include "mmap_cache.h"
 #include "mmap_cache_internals.h"
 

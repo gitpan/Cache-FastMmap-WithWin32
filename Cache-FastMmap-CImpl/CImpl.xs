@@ -55,12 +55,12 @@ fc_get_param(obj, param)
     if (!strcmp(param, "share_file")) {
       RETVAL = newSVpv( (char*)mmc_get_param(cache, param), 0);
     } else {
-      RETVAL = mmc_get_param(cache, param);
+      RETVAL = (SV*)mmc_get_param(cache, param);
     }
   OUTPUT:
     RETVAL
   POSTCALL:
-    if (RETVAL == -1) {
+    if ((int)RETVAL == -1) {
       croak(mmc_error(cache));
     }
 
@@ -422,6 +422,7 @@ fc_expunge(obj, mode, wb, len)
     int wb;
     int len;
   INIT:
+    SV *val;
     mmap_cache * cache;
     MU32 new_num_slots = 0, ** to_expunge = 0;
     int num_expunge, item;
@@ -467,7 +468,6 @@ fc_expunge(obj, mode, wb, len)
             flags ^= FC_UTF8KEY;
           }
 
-          SV * val;
           if (flags & FC_UNDEF) {
             val = newSV(0);
             flags ^= FC_UNDEF;

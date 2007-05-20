@@ -198,6 +198,8 @@ int mmc_unlock_page(mmap_cache* cache) {
     
     /* Set to bad value while page not locked */
     cache->p_cur = ~0; /* ~0 = -1, but unsigned */
+
+    return 0;
 }
 
 

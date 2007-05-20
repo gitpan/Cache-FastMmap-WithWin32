@@ -225,7 +225,7 @@ use strict;
 use warnings;
 use bytes;
 
-our $VERSION = '1.16.2';
+our $VERSION = '1.16.3';
 
 use Cache::FastMmap::WithWin32::CImpl;
 
@@ -1010,6 +1010,8 @@ L<http://cpan.robm.fastmail.fm/cachefastmmap/>
 Original *nix version by Rob Mueller E<lt>L<mailto:cpan@robm.fastmail.fm>E<gt>
 
 Win32 port and refactoring by Ash Berlin L<< <ash@cpan.org> >>
+
+VC6 fixes from Kenichi Ishigaki
 
 =head1 COPYRIGHT AND LICENSE
 
