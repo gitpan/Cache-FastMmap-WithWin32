@@ -3,8 +3,8 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     'NAME'          => 'Cache::FastMmap::WithWin32',
-    'VERSION_FROM'  => 'lib/Cache/FastMmap.pm',
-    'ABSTRACT_FROM' => 'lib/Cache/FastMmap.pm',
+    'VERSION_FROM'  => 'lib/Cache/FastMmap/WithWin32.pm',
+    'ABSTRACT_FROM' => 'lib/Cache/FastMmap/WithWin32.pm',
     'AUTHOR'        => 'Ash Berlin <cpan@cpan.org>',
     'PREREQ_PM'     => {
       'Storable' => 0

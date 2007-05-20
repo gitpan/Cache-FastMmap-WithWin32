@@ -12,7 +12,7 @@ Cache-FastMmap-CImpl/win32.c
 Cache-FastMmap-CImpl/mmap_cache_internals.h
 Cache-FastMmap-CImpl/README
 Changes
-lib/Cache/FastMmap.pm
+lib/Cache/FastMmap/WithWin32.pm
 Makefile.PL
 MANIFEST			This list of files
 META.yml			Module meta-data (added by MakeMaker)

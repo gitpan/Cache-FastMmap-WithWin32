@@ -8,7 +8,7 @@ if ($@) {
 } else {
   plan tests => 9;
 }
-BEGIN { use_ok('Cache::FastMmap') };
+BEGIN { use_ok('Cache::FastMmap::WithWin32') };
 use strict;
 
 my $GTop = GTop->new;

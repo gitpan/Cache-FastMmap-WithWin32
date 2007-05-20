@@ -2,7 +2,7 @@
 #########################
 
 use Test::More tests => 9;
-BEGIN { use_ok('Cache::FastMmap') };
+BEGIN { use_ok('Cache::FastMmap::WithWin32') };
 use Data::Dumper;
 use strict;
 

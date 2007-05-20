@@ -16,7 +16,7 @@ use strict;
 use warnings;
 
 require XSLoader;
-our $VERSION = '1.16.1';
+our $VERSION = '1.16.2';
 XSLoader::load('Cache::FastMmap::WithWin32::CImpl', $VERSION);
 # }}}
 

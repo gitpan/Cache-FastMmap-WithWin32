@@ -1,5 +1,3 @@
-BEGIN{$DB::single = 1; }
-
 package Cache::FastMmap::WithWin32;
 
 =head1 NAME
@@ -8,10 +6,10 @@ Cache::FastMmap::WithWin32 - Uses an mmap'ed file to act as a shared memory inte
 
 =head1 SYNOPSIS
 
-  use Cache::FastMmap; # Yes, this is correct for this module
+  use Cache::FastMmap::WithWin32; 
 
   # Uses vaguely sane defaults
-  $Cache = Cache::FastMmap->new();
+  $Cache = Cache::FastMmap->new(); # Yes, this is correct for this module
 
   # $Value must be a reference...
   $Cache->set($Key, $Value);
@@ -227,7 +225,7 @@ use strict;
 use warnings;
 use bytes;
 
-our $VERSION = '1.16.1';
+our $VERSION = '1.16.2';
 
 use Cache::FastMmap::WithWin32::CImpl;
 

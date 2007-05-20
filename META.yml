@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Cache-FastMmap-WithWin32
-version:             1.16.1
+version:             1.16.2
 abstract:            Uses an mmap'ed file to act as a shared memory interprocess cache
 license:             ~
 generated_by:        ExtUtils::MakeMaker version 6.32
