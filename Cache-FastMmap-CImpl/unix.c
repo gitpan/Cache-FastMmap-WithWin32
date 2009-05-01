@@ -27,16 +27,9 @@
 #include "mmap_cache.h"
 #include "mmap_cache_internals.h"
 
-#ifdef DEBUG
-#define ASSERT(x) assert(x)
-#include <assert.h>
-#else
-#define ASSERT(x)
-#endif
-
 char* _mmc_get_def_share_filename(mmap_cache * cache)
 {
-	return def_share_file;
+  return def_share_file;
 }
 
 int mmc_open_cache_file(mmap_cache* cache, int * do_init) {
@@ -76,7 +69,15 @@ int mmc_open_cache_file(mmap_cache* cache, int * do_init) {
 
     memset(tmp, 0, cache->c_page_size);
     for (i = 0; i < cache->c_num_pages; i++) {
-      write(res, tmp, cache->c_page_size);
+      int written = write(res, tmp, cache->c_page_size);
+      if (written < 0) {
+        _mmc_set_error(cache, errno, "Write to share file %s failed", cache->share_file);
+        return -1;
+      }
+      if (written < cache->c_page_size) {
+        _mmc_set_error(cache, errno, "Write to share file %s failed; short write (%d of %d bytes written)", cache->share_file, written, cache->c_page_size);
+        return -1;
+      }
     }
     free(tmp);
 
@@ -123,8 +124,10 @@ int mmc_map_memory(mmap_cache* cache) {
 */
 int mmc_unmap_memory(mmap_cache* cache) {
   int res = munmap(cache->mm_var, cache->c_size);
-  if (res == -1)
+  if (res == -1) {
     _mmc_set_error(cache, errno, "Munmap of shared file %s failed", cache->share_file);
+    return -1;
+  }
   return res;
 }
 

@@ -1,68 +1,4 @@
-package Cache::FastMmap::WithWin32;
-
-our $VERSION = '1.28.1';
-
-=head1 NAME
-
-Cache::FastMmap::WithWin32 - Uses an mmap'ed file to act as a shared memory interprocess cache
-
-=head1 SYNOPSIS
-
-  use Cache::FastMmap::WithWin32; 
-
-  # Uses vaguely sane defaults
-  $Cache = Cache::FastMmap->new(); # Yes, this is correct for this module
-
-  # $Value must be a reference...
-  $Cache->set($Key, $Value);
-  $Value = $Cache->get($Key);
-
-  $Cache = Cache::FastMmap->new(raw_values => 1);
-
-  # $Value can't be a reference...
-  $Cache->set($Key, $Value);
-  $Value = $Cache->get($Key);
-
-=head1 ABSTRACT
-
-A shared memory cache through an mmap'ed file. It's core is written
-in C for performance. It uses fcntl locking to ensure multiple
-processes can safely access the cache at the same time. It uses
-a basic LRU algorithm to keep the most used entries in the cache.
-
-=head1 DESCRIPTION
-
-This module is a fork of Cache::FastMmap by Rob Mueller to include the Win32
-port by Ash Berlin, cos i got fed up waiting for Rob to release it. 
-This distribution contains a file called Cache/FastMmap/WithWin32.pm that 
-contains a C<Cache::FastMmap> package, so including this module allows your
-code to run on both *nix and Win32 without modification (or at least that is
-the plan)
-
-Since I haven't changed anything in the interface or behaviour of the original
-module, see L<Cache::FastMmap> for documentation.
-
-=head1 AUTHOR
-
-Original *nix version by Rob Mueller E<lt>L<mailto:cpan@robm.fastmail.fm>E<gt>
-
-Win32 port and refactoring by Ash Berlin L<< <ash@cpan.org> >>
-
-VC6 fixes from Kenichi Ishigaki
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (C) 2003-2007 by FastMail IP Partners
-
-Portions copyright (C) 2007 Ash Berlin
-
-This library is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself. 
-
-=cut
-
-package # 
-  Cache::FastMmap;
+package Cache::FastMmap;
 
 =head1 NAME
 
@@ -351,7 +287,7 @@ use strict;
 use warnings;
 use bytes;
 
-our $VERSION = '1.28.1';
+our $VERSION = '1.28';
 
 use Cache::FastMmap::CImpl;
 

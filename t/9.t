@@ -2,7 +2,7 @@
 #########################
 
 use Test::More tests => 5;
-BEGIN { use_ok('Cache::FastMmap::WithWin32') };
+BEGIN { use_ok('Cache::FastMmap') };
 use Storable qw(freeze thaw);
 use strict;
 

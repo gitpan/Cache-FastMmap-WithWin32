@@ -2,7 +2,7 @@
 #########################
 
 use Test::More tests => 8;
-BEGIN { use_ok('Cache::FastMmap::WithWin32') };
+BEGIN { use_ok('Cache::FastMmap') };
 use strict;
 
 #########################

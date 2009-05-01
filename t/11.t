@@ -2,15 +2,15 @@
 #########################
 
 use Test::More tests => 7;
-BEGIN { use_ok('Cache::FastMmap::WithWin32') };
+BEGIN { use_ok('Cache::FastMmap') };
 use strict;
 
 #########################
 
 # Test recursive cache use
 
-my $FC;
 sub get_fc {
+my $FC;
 $FC = Cache::FastMmap->new(
   cache_not_found => 1,
   raw_values => 1,
@@ -26,7 +26,7 @@ $FC = Cache::FastMmap->new(
 return $FC;
 }
 
-$FC = get_fc();
+my $FC = get_fc();
 ok( defined $FC );
 
 $FC->set("foo1", "bar");

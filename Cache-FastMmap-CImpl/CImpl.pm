@@ -1,12 +1,12 @@
-package Cache::FastMmap::WithWin32::CImpl;
+package Cache::FastMmap::CImpl;
 
 =head1 NAME
 
-Cache::FastMmap::WithWin32::CImpl - C code implementation for Cache::FastMmap::WithWin32
+Cache::FastMmap::CImpl - C code implementation for Cache::FastMmap
 
 =head1 SYNOPSIS
 
-Do not use this directly. Cache::FastMmap::WithWin32 uses this
+Do not use this directly. Cache::FastMmap uses this
 
 =cut
 
@@ -15,9 +15,10 @@ use 5.006;
 use strict;
 use warnings;
 
+our $VERSION = '1.28';
+
 require XSLoader;
-our $VERSION = '1.16.4';
-XSLoader::load('Cache::FastMmap::WithWin32::CImpl', $VERSION);
+XSLoader::load('Cache::FastMmap::CImpl', $VERSION);
 # }}}
 
 sub DESTROY {
@@ -33,9 +34,7 @@ __END__
 
 =head1 AUTHOR
 
-Original Unix version by Rob Mueller E<lt>cpan@robm.fastmail.fmE<gt>
-
-Win32 port by Ash Berlin <ash@cpan.org>
+Rob Mueller E<lt>cpan@robm.fastmail.fmE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

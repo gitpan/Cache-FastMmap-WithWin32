@@ -41,9 +41,8 @@ char* _mmc_get_def_share_filename(mmap_cache * cache)
     {
         _mmc_set_error(cache, GetLastError(), "Unable to get temp path");
         return NULL;
-    }
-
-    return strcat(buf, "sharefile");
+    }    
+    return strcat(buf, "sharefile");    
 }
 
 int mmc_open_cache_file(mmap_cache* cache, int* do_init) {
@@ -58,8 +57,8 @@ int mmc_open_cache_file(mmap_cache* cache, int* do_init) {
         
     /* Create file if it doesn't exist */    
     if (findHandle == INVALID_HANDLE_VALUE) {
-        fh = CreateFile(cache->share_file,
-                GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+        fh = CreateFile(cache->share_file, GENERIC_WRITE, FILE_SHARE_WRITE, NULL,
+                        CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
                 
         if (fh == INVALID_HANDLE_VALUE) {
             _mmc_set_error(cache, GetLastError(), "Create of share file %s failed", cache->share_file);
@@ -89,12 +88,11 @@ int mmc_open_cache_file(mmap_cache* cache, int* do_init) {
         FindClose(findHandle);
     
         if (cache->init_file || (statbuf.nFileSizeLow != cache->c_size)) {
-        
             *do_init = 1;
     
-            // Note: Windows wont allow delete if anyone has file open OR mmaped
-            fh = CreateFile(cache->share_file, GENERIC_READ|GENERIC_WRITE, 0,
-                            NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+            fh = CreateFile(cache->share_file, GENERIC_WRITE, FILE_SHARE_WRITE, NULL,
+			    CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, NULL);
+                            
             if (fh == INVALID_HANDLE_VALUE) {
                 _mmc_set_error(cache, GetLastError(), "Truncate of existing share file %s failed", cache->share_file);
                 return -1;
@@ -103,13 +101,13 @@ int mmc_open_cache_file(mmap_cache* cache, int* do_init) {
         }
     }
     
-    fh = CreateFile(cache->share_file,      // File Name 
-             GENERIC_READ|GENERIC_WRITE,    // Desired Access
+    fh = CreateFile(cache->share_file,         // File Name 
+             GENERIC_READ|GENERIC_WRITE,       // Desired Access
              FILE_SHARE_READ|FILE_SHARE_WRITE, // Share mode
-             NULL,                          // Security Rights
-             OPEN_EXISTING,                 // Creation Mode
-             FILE_ATTRIBUTE_NORMAL,         // File Attribs
-             NULL);                         // Template File    
+             NULL,                             // Security Rights
+             OPEN_EXISTING,                    // Creation Mode
+             FILE_ATTRIBUTE_TEMPORARY,         // File Attribs
+             NULL);                            // Template File    
     
     if (fh == INVALID_HANDLE_VALUE) {
         _mmc_set_error(cache, GetLastError(), "Open of share file \"%s\" failed", cache->share_file);
@@ -144,7 +142,6 @@ int mmc_map_memory(mmap_cache * cache) {
         CloseHandle(cache->fh);
         return -1;
     }
-
   return 0;
 }
 
@@ -165,7 +162,6 @@ int mmc_unmap_memory(mmap_cache* cache) {
 int mmc_lock_page(mmap_cache* cache, MU32 p_offset) {
     OVERLAPPED lock;
     DWORD lock_res, bytesTransfered;
-
     memset(&lock, 0, sizeof(lock));
     lock.Offset = p_offset;
     lock.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -182,27 +178,20 @@ int mmc_lock_page(mmap_cache* cache, MU32 p_offset) {
         _mmc_set_error(cache, GetLastError(), "Overlapped Lock failed");
         return -1;
     }
-
   return 0;
 }
 
 int mmc_unlock_page(mmap_cache* cache) {
     OVERLAPPED lock;
-
     memset(&lock, 0, sizeof(lock));
     lock.Offset = cache->p_offset;
     lock.hEvent = 0;
   
     UnlockFileEx(cache->fh, 0, cache->c_page_size, 0, &lock);
-
     
     /* Set to bad value while page not locked */
-    cache->p_cur = ~0; /* ~0 = -1, but unsigned */
-
-    return 0;
+    cache->p_cur = ~0; /* ~0 = -1, but unsigned */    
 }
-
-
 
 /*
  * int _mmc_set_error(mmap_cache *cache, int err, char * error_string, ...)

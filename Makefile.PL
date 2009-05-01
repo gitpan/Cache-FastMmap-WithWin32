@@ -5,12 +5,12 @@ WriteMakefile(
     'NAME'          => 'Cache::FastMmap::WithWin32',
     'VERSION_FROM'  => 'lib/Cache/FastMmap/WithWin32.pm',
     'ABSTRACT_FROM' => 'lib/Cache/FastMmap/WithWin32.pm',
-    'AUTHOR'        => 'Ash Berlin <cpan@cpan.org>',
+    'AUTHOR'        => 'Rob Mueller <cpan@robm.fastmail.fm>',
     'PREREQ_PM'     => {
-      'Storable' => 0
+      'Storable' => 0,
     },
     'DIR'           => [
       'Cache-FastMmap-CImpl'
     ],
-#	    'OPTIMIZE' => '-g -DDEBUG',
+#	    'OPTIMIZE' => '-g -DDEBUG -ansi -pedantic',
 );

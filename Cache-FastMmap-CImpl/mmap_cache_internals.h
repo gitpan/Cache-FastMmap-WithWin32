@@ -1,7 +1,6 @@
 #ifndef mmap_cache_internals_h
 #define mmap_cache_interanls_h
 
-
 #ifdef DEBUG
 #define ASSERT(x) assert(x)
 #include <assert.h>
@@ -10,7 +9,7 @@
 #endif
 
 #ifdef WIN32
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 /* Cache structure */
@@ -27,6 +26,8 @@ struct mmap_cache {
   MU32    p_old_slots;
   MU32    p_free_data;
   MU32    p_free_bytes;
+  MU32    p_n_reads;
+  MU32    p_n_read_hits;
 
   int    p_changed;
 
@@ -41,6 +42,7 @@ struct mmap_cache {
   /* Cache general details */
   MU32    start_slots;
   MU32    expire_time;
+  int     enable_stats;
 
   /* Share mmap file details */
 #ifdef WIN32
@@ -58,43 +60,12 @@ struct mmap_cache {
 
 };
 
-extern char * def_share_file;
-extern MU32    def_init_file;
-extern MU32    def_test_file;
-extern MU32    def_expire_time;
-extern MU32    def_c_num_pages;
-extern MU32    def_c_page_size;
-extern MU32    def_start_slots;
-extern char* _mmc_get_def_share_filename(mmap_cache * cache);
-
 struct mmap_cache_it {
   mmap_cache * cache;
   MU32         p_cur;
   MU32 *       slot_ptr;
   MU32 *       slot_ptr_end;
 };
-
-/* Platform specific functions */
-int mmc_open_cache_file(mmap_cache* cache, int *do_init);
-int mmc_map_memory(mmap_cache *cache);
-int mmc_unmap_memory(mmap_cache *cache);
-int mmc_close_fh(mmap_cache *cache);
-int mmc_lock_page(mmap_cache *cache, MU32 p_offset);
-int mmc_unlock_page(mmap_cache *cache);
-
-
-/* Internal functions */
-int  _mmc_set_error(mmap_cache *, int, char *, ...);
-void _mmc_init_page(mmap_cache *, MU32);
-
-MU32 * _mmc_find_slot(mmap_cache * , MU32 , void *, int, int );
-void   _mmc_delete_slot(mmap_cache * , MU32 *);
-
-int _mmc_check_expunge(mmap_cache * , int);
-
-int _mmc_test_pages(mmap_cache * cache);
-int _mmc_test_page(mmap_cache *);
-int _mmc_dump_page(mmap_cache *);
 
 /* Macros to access page entries */
 #define PP(p) ((MU32 *)p)
@@ -105,6 +76,8 @@ int _mmc_dump_page(mmap_cache *);
 #define P_OldSlots(p) (*(PP(p)+3))
 #define P_FreeData(p) (*(PP(p)+4))
 #define P_FreeBytes(p) (*(PP(p)+5))
+#define P_NReads(p) (*(PP(p)+6))
+#define P_NReadHits(p) (*(PP(p)+7))
 
 #define P_HEADERSIZE 32
 
@@ -131,8 +104,27 @@ int _mmc_dump_page(mmap_cache *);
 #define S_SlotLen(s)    (sizeof(MU32)*6 + S_KeyLen(s) + S_ValLen(s))
 #define KV_SlotLen(k,v) (sizeof(MU32)*6 + k + v)
 /* Found key/val len to nearest 4 bytes */
-#define ROUNDLEN(l)     ((l) += 3 - (((l)-1) & 3))
+#define ROUNDLEN(l)     ((l) += 3 - (((l)-1) & 3))  
 
+/* Externs from mmap_cache.c */ 
+extern char * def_share_file;
+extern MU32    def_init_file;
+extern MU32    def_test_file;
+extern MU32    def_expire_time;
+extern MU32    def_c_num_pages;
+extern MU32    def_c_page_size;
+extern MU32    def_start_slots;
+extern char* _mmc_get_def_share_filename(mmap_cache * cache);
+
+/* Platform specific functions defined in unix.c | win32.c */
+int mmc_open_cache_file(mmap_cache* cache, int * do_init);
+int mmc_map_memory(mmap_cache* cache);
+int mmc_unmap_memory(mmap_cache* cache);
+int mmc_lock_page(mmap_cache* cache, MU32 p_offset);
+int mmc_unlock_page(mmap_cache * cache);
+int mmc_close_fh(mmap_cache* cache);
+int _mmc_set_error(mmap_cache *cache, int err, char * error_string, ...);
+char* _mmc_get_def_share_filename(mmap_cache * cache);
 
 #endif
 
